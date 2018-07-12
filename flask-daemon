@@ -1,0 +1,46 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:     flask app running
+# Required-Start:   $remote_fs $syslog
+# Required-Stop:    $remote_fs $syslog
+# Default-Start:    2 3 4 5
+# Default-Stop:
+# Short-Description: Start/Stop/Restart a Flask application.
+### END INIT INFO
+
+set -e
+
+case "$1" in
+  start)
+    echo "Starting python-Flask app"
+    source_file="/home/vagrant/flask-app/venv/bin/activate"
+    . $source_file
+    FLASK_APP=/home/vagrant/flask-app/hello.py flask run &
+    ;;
+  stop)
+    echo "Stopping python-Flask processes"
+    process_id=$(ps aux | grep python | awk '{print $2}' | head -1)
+    echo "PROCESS_ID"
+    echo $process_id
+    kill $process_id
+    #kill $(pgrep python)
+    #pkill "python"
+    echo "Finished.."
+    ;;
+  restart)
+    echo "Stopping Flask processes from restart"
+    kill $(ps aux | grep python | awk '{print $2}' | head -1)
+    #kill $(pgrep flask)
+    wait
+    echo "Starting Flask from restart"
+    source_file="/home/vagrant/flask-app/venv/bin/activate"
+    . $source_file
+    FLASK_APP=/home/vagrant/flask-app/hello.py flask run &
+    ;;
+  *)
+    echo "Usage: /etc/init.d/flask {start|stop|restart}"
+    exit 1
+esac
+
+exit 0
