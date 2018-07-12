@@ -1,0 +1,10 @@
+[Unit]
+Description=Flask app daemon
+[Service]
+Type=oneshot
+ExecStart=/etc/init.d/flask-daemon start
+ExecStop=/etc/init.d/flask-daemon stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
